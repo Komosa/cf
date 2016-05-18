@@ -17,7 +17,7 @@ import (
 
 type probCode struct {
 	contest int
-	task    byte
+	task    string
 }
 
 func (pc probCode) String() string {
@@ -27,7 +27,7 @@ func (pc probCode) String() string {
 // guess not defined args
 func (cf *cf) guessArgs(file *string, prob probCode, lang *int) error {
 	f, l := *file, *lang
-	needExt := len(f) == 1 && toupper(f[0]) == prob.task
+	needExt := len(f) < 3
 
 	if l == 0 && needExt {
 		// search over disk
@@ -39,10 +39,10 @@ func (cf *cf) guessArgs(file *string, prob probCode, lang *int) error {
 			}
 		}
 		if len(match) == 0 {
-			return fmt.Errorf("submit: could not found solution file for %q", prob.task)
+			return fmt.Errorf("submit: could not found solution file for problem %q", prob.task)
 		}
 		if len(match) > 1 {
-			buf := bytes.NewBufferString("submit: more than one file looks like solution for ")
+			buf := bytes.NewBufferString("submit: more than one file looks like solution for problem ")
 			fmt.Fprintf(buf, "%v, candidates (with lang IDs):", prob.task)
 			for _, k := range match {
 				fmt.Fprintf(buf, "\n%s%v (%s)", f, k, cf.config[k])
@@ -70,10 +70,10 @@ func (cf *cf) guessArgs(file *string, prob probCode, lang *int) error {
 
 	if l == 0 {
 		ext := filepath.Ext(f)
-		if ext == "" {
+		if len(ext) < 2 {
 			return errors.New("submit: lang must be specified")
 		}
-		s, ok := cf.config[ext]
+		s, ok := cf.config[ext[1:]]
 		if !ok {
 			return fmt.Errorf("submit: unknown file extension %q, (you may add it in conf)", ext)
 		}
@@ -128,7 +128,7 @@ func (cf *cf) submit(file string, prob probCode, lang int) error {
 	action := formAction(submitForm)
 	fields := form(selInput.MatchAll(submitForm))
 	fields.Del("sourceFile")
-	fields.Set("submittedProblemIndex", string(prob.task))
+	fields.Set("submittedProblemIndex", prob.task)
 	fields.Set("programTypeId", fmt.Sprintf("%d", lang))
 
 	buf := &bytes.Buffer{}

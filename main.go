@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 )
@@ -84,7 +85,11 @@ func run() error {
 			return err
 		}
 		if param == "" {
-			return errors.New("submit: empty problem code")
+			if prob.task != "" {
+				param = prob.task
+			} else {
+				return errors.New("submit: empty problem code")
+			}
 		}
 		if prob.contest == 0 {
 			prob.contest, err = cf.contest()
@@ -92,15 +97,24 @@ func run() error {
 				return err
 			}
 		}
-		if prob.task == 0 {
-			prob.task = param[0]
+		if prob.task == "" {
+			base := filepath.Base(param)
+			idx := strings.LastIndexByte(base, '.')
+			if idx != -1 {
+				base = base[:idx]
+			}
+
+			if len(base) == 1 && isletter(rune(base[0])) {
+				prob.task = base
+			} else if len(base) == 2 && isletter(rune(base[0])) && base[1] >= '0' && base[1] <= '9' {
+				prob.task = base
+			} else {
+				return errors.New("submit: please explicitly pass problem code (-prob=...)")
+			}
+
 		}
-		if !isletter(prob.task) {
-			return errors.New("submit: problem code must be latin letter")
-		}
-		if prob.task >= 'a' {
-			prob.task = toupper(prob.task)
-		}
+		prob.task = strings.ToUpper(prob.task)
+
 		err = cf.submit(param, prob, lang)
 		if err != nil {
 			return err
@@ -129,20 +143,26 @@ func parseArgs(args []string) (cmd, param string, prob probCode, lang int, err e
 		if a[0] == '-' {
 			if strings.HasPrefix(a, "-prob=") {
 				p := a[6:]
+				// contest must be first or skipped
+				// then goes problem code
+				// eg: 'a', '555a', '670d1', 'd1'
+				// 'a670' isn't allowed ('d1670' would be ambigous)
 				switch {
 				case len(p) == 0:
 					err = errors.New("cmdline: empty problem code")
 					return
-				case isletter(p[0]):
-					prob.task = p[0]
-					p = p[1:]
+				case isletter(rune(p[0])):
+					prob.task = p
 				default:
-					prob.task = p[len(p)-1]
-					p = p[:len(p)-1]
-				}
-				if len(p) > 0 {
-					prob.contest, err = strconv.Atoi(p)
+					taskIdx := strings.IndexFunc(p, isletter)
+					if taskIdx == -1 {
+						prob.contest, err = strconv.Atoi(p)
+					} else {
+						prob.task = p[taskIdx:]
+						prob.contest, err = strconv.Atoi(p[:taskIdx])
+					}
 					if err != nil {
+						err = fmt.Errorf("cmdline: invalid problem code %q", p)
 						return
 					}
 				}
@@ -169,7 +189,7 @@ func parseArgs(args []string) (cmd, param string, prob probCode, lang int, err e
 	return
 }
 
-func isletter(ch byte) bool {
+func isletter(ch rune) bool {
 	return (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z')
 }
 func toupper(ch byte) byte {
