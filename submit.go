@@ -107,7 +107,8 @@ func (cf *cf) submit(file string, prob probCode, lang int) error {
 	}
 	defer f.Close()
 
-	resp, err := cf.client.Get(CFURL + "/problemset/submit")
+	submitURL := contestURL(prob)
+	resp, err := cf.client.Get(submitURL)
 	if err != nil {
 		return err
 	}
@@ -127,7 +128,7 @@ func (cf *cf) submit(file string, prob probCode, lang int) error {
 	action := formAction(submitForm)
 	fields := form(selInput.MatchAll(submitForm))
 	fields.Del("sourceFile")
-	fields.Set("submittedProblemCode", prob.String())
+	fields.Set("submittedProblemIndex", string(prob.task))
 	fields.Set("programTypeId", fmt.Sprintf("%d", lang))
 
 	buf := &bytes.Buffer{}
@@ -146,7 +147,9 @@ func (cf *cf) submit(file string, prob probCode, lang int) error {
 	}
 	w.Close()
 
-	req, err := http.NewRequest("POST", CFURL+"/problemset/submit"+action, buf)
+	// http://codeforces.com/contest/675/submit?csrf_token=03110b969ffffff36c768b25efa1b3b1
+	// action starts at '?'
+	req, err := http.NewRequest("POST", submitURL+action, buf)
 	if err != nil {
 		return err
 	}
@@ -160,4 +163,8 @@ func (cf *cf) submit(file string, prob probCode, lang int) error {
 
 	cf.status()
 	return nil
+}
+
+func contestURL(prob probCode) string {
+	return fmt.Sprintf(CFURL+"/contest/%d/submit", prob.contest)
 }
