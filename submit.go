@@ -11,6 +11,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 
 	"golang.org/x/net/html"
 )
@@ -113,17 +114,21 @@ func (cf *cf) submit(file string, prob probCode, lang int) error {
 		return err
 	}
 	defer resp.Body.Close()
-	if resp.Request.URL.String() == CFURL+"/enter" {
-		return errors.New("submit: not logged in")
+	if !strings.HasSuffix(resp.Request.URL.String(), "/submit") {
+		return errors.New("submit: probably not logged in or login expired; was redirected to: " + resp.Request.URL.String())
 	}
 
 	tree, err := html.Parse(resp.Body)
 	if err != nil {
 		return err
 	}
-	submitForm := selSubmit.MatchFirst(tree)
 	if tree == nil {
-		return errors.New("login: could not match enter form")
+		return errors.New("submit: could not parse html response for /submit")
+	}
+
+	submitForm := selSubmit.MatchFirst(tree)
+	if submitForm == nil {
+		return errors.New("submit: could not match submit form")
 	}
 	action := formAction(submitForm)
 	fields := form(selInput.MatchAll(submitForm))
