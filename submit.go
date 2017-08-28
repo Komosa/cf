@@ -175,5 +175,9 @@ func (cf *cf) submit(file string, prob probCode, lang int) error {
 }
 
 func contestURL(prob probCode) string {
-	return fmt.Sprintf(CFURL+"/contest/%d/submit", prob.contest)
+	contestOrGym := "contest"
+	if prob.contest >= 100000 { // just guessing here
+		contestOrGym = "gym"
+	}
+	return fmt.Sprintf(CFURL+"/%s/%d/submit", contestOrGym, prob.contest)
 }
