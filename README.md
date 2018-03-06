@@ -10,7 +10,7 @@ Binaries are available here: https://github.com/Komosa/cf_binaries (if you don't
 It is also wise to set contest ID before it started.
 
 Examples (commands):
-- `cf login handle1` will try log in as _handle1_, asking for password if necessary;
+- `cf login exampleuser` will try log in as _exampleuser_, asking for password if necessary;
 - `cf login` will try log in as previously logged user, asking for password if necessary;
 - `cf submit x.c -prob=555a -lang=10` submits file _x.c_ as solution for problem _555A_, using compiler number _10_;
 - `cf submit x.c -prob=555a` submits file _x.c_ as solution for problem _555A_, using default compiler for _c_;
