@@ -21,10 +21,6 @@ type probCode struct {
 	task    string
 }
 
-func (pc probCode) String() string {
-	return fmt.Sprintf("%d%c", pc.contest, pc.task)
-}
-
 // guess not defined args
 func (cf *cf) guessArgs(file *string, prob probCode, lang *int) error {
 	f, l := *file, *lang

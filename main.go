@@ -192,9 +192,3 @@ func parseArgs(args []string) (cmd, param string, prob probCode, lang int, err e
 func isletter(ch rune) bool {
 	return (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z')
 }
-func toupper(ch byte) byte {
-	if ch >= 'a' && ch <= 'z' {
-		return ch + 'A' - 'a'
-	}
-	return ch
-}
