@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	selSubmit = cascadia.MustCompile("form.submit-form")
+	selSubmit = cascadia.MustCompile("form.submitForm")
 	selEnter  = cascadia.MustCompile("form#enterForm")
 	selInput  = cascadia.MustCompile("input[name]")
 )

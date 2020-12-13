@@ -16,10 +16,10 @@ import (
 
 var defConf = map[string]string{
 	// first five langs here have more than one complier on CF currently
-	"cpp":  "1",
-	"c":    "10",
+	"cpp":  "61",
+	"c":    "43",
 	"py":   "31",
-	"java": "36",
+	"java": "60",
 	"pas":  "4",
 	// below are obvious ones
 	"d":     "28",
@@ -27,12 +27,13 @@ var defConf = map[string]string{
 	"rb":    "8",
 	"php":   "6",
 	"js":    "34",
-	"cs":    "29",
+	"cs":    "65",
 	"ml":    "19",
 	"go":    "32",
 	"scala": "20",
 	"hs":    "12",
 	"tcl":   "14",
+	"rs":    "49",
 	// esoteric langs skipped
 }
 

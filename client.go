@@ -11,7 +11,7 @@ import (
 	"golang.org/x/net/publicsuffix"
 )
 
-const CFURL = "http://codeforces.com"
+const CFURL = "https://codeforces.com"
 
 func (cf *cf) initClient() error {
 	sysuser, err := user.Current()

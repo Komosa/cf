@@ -36,7 +36,7 @@ func (cf *cf) login(user, pass string) error {
 
 	inputs := selInput.MatchAll(enterForm)
 	f := form(inputs)
-	f.Set("handle", user)
+	f.Set("handleOrEmail", user)
 	f.Set("password", pass)
 	f.Set("remember", "checked")
 

@@ -110,7 +110,7 @@ func (cf *cf) submit(file string, prob probCode, lang int) error {
 		return err
 	}
 	defer resp.Body.Close()
-	if !strings.HasSuffix(resp.Request.URL.String(), "/submit") {
+	if !strings.Contains(resp.Request.URL.String(), "/problem/") {
 		return errors.New("submit: probably not logged in or login expired; was redirected to: " + resp.Request.URL.String())
 	}
 
@@ -119,7 +119,7 @@ func (cf *cf) submit(file string, prob probCode, lang int) error {
 		return err
 	}
 	if tree == nil {
-		return errors.New("submit: could not parse html response for /submit")
+		return errors.New("submit: could not parse html response for /problem")
 	}
 
 	submitForm := selSubmit.MatchFirst(tree)
@@ -148,7 +148,7 @@ func (cf *cf) submit(file string, prob probCode, lang int) error {
 	}
 	w.Close()
 
-	// http://codeforces.com/contest/675/submit?csrf_token=03110b969ffffff36c768b25efa1b3b1
+	// http://codeforces.com/contest/1436/problem/B?csrf_token=1d130cd435e8bf4e59f8888974641a3f
 	// action starts at '?'
 	req, err := http.NewRequest("POST", submitURL+action, buf)
 	if err != nil {
@@ -175,5 +175,5 @@ func contestURL(prob probCode) string {
 	if prob.contest >= 100000 { // just guessing here
 		contestOrGym = "gym"
 	}
-	return fmt.Sprintf(CFURL+"/%s/%d/submit", contestOrGym, prob.contest)
+	return fmt.Sprintf(CFURL+"/%s/%d/problem/%s", contestOrGym, prob.contest, prob.task)
 }
