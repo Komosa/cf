@@ -39,7 +39,9 @@ var defConf = map[string]string{
 
 func (cf *cf) contest() (int, error) {
 	if s, ok := cf.config["contest"]; ok {
-		return strconv.Atoi(s)
+		if c, err := strconv.Atoi(s); c > 0 || err != nil {
+			return c, err
+		}
 	}
 	return 0, errors.New("conf: 'contest' must be specified via config file, 'con' subcommand or '-prob' switch")
 
