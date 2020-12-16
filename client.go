@@ -6,7 +6,7 @@ import (
 	"os/user"
 	"path/filepath"
 
-	"github.com/Komosa/persistent-cookiejar"
+	cookiejar "github.com/Komosa/persistent-cookiejar"
 
 	"golang.org/x/net/publicsuffix"
 )
