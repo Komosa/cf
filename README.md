@@ -4,9 +4,15 @@ Features:
 - possibility to submit code
 - and see the result.
 
-Binaries are available here: https://github.com/Komosa/cf_binaries (if you don't like to compile it yourself).
+### Installation
+1. install go compiler, as per https://golang.org/dl
+2. `go get -u github.com/Komosa/cf`
 
+If you don't like to compile it yourself, pre-built binaries are available here: https://github.com/Komosa/cf_binaries
+
+### Usage
 **Note**: to get best performance it suggested to login before contest.
+
 It is also wise to set contest ID before it started.
 
 Examples (commands):

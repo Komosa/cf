@@ -13,6 +13,8 @@ var usageText = `usage:
 cf submit FILE[.EXT] [-lang=LANG] [-prob=PROBLEM]
 cf login [HANDLE]
 cf con [CONTEST]
+cf conf default
+cf conf lang=LANGID
 
 Where FILE is file to be submitted
 when file has EXTension, it helps determine default language
@@ -28,6 +30,9 @@ or saved config (contest).
 CONTEST will be saved in conf.
 
 HANDLE will be used to login, when not specified last login will be used.
+
+Language config could be set to default for all languages
+	or set to LANGID for specific one.
 `
 
 func main() {
