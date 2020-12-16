@@ -49,12 +49,12 @@ func run() error {
 	if err != nil {
 		return err
 	}
+	cf, err := newCF()
+	if err != nil {
+		return err
+	}
 	switch cmd {
 	case "login":
-		cf, err := newCF()
-		if err != nil {
-			return err
-		}
 		if param == "" {
 			if u, ok := cf.config["user"]; ok {
 				param = u
@@ -80,10 +80,6 @@ func run() error {
 		}
 		return cf.saveCookie()
 	case "submit":
-		cf, err := newCF()
-		if err != nil {
-			return err
-		}
 		if param == "" {
 			if prob.task != "" {
 				param = prob.task
@@ -121,10 +117,6 @@ func run() error {
 		}
 		return cf.saveCookie()
 	case "con":
-		cf, err := newCF()
-		if err != nil {
-			return err
-		}
 		cf.config["contest"] = param
 		return cf.save()
 	case "help":
