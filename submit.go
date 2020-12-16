@@ -161,12 +161,12 @@ func (cf *cf) submit(file string, prob probCode, lang int) error {
 	}
 	resp.Body.Close()
 	if resp.StatusCode == 200 || resp.StatusCode == 100 {
-		log.Println("code submitted properly")
+		log.Println("code submitted properly, you could safely kill this program from now on (by ^C)")
 	} else {
-		log.Println("code submitted, response status:", resp.Status)
+		log.Printf("code submitted, response HTTP status: %d, you could safely kill this program from now on (by ^C)\n", resp.StatusCode)
 	}
 
-	cf.status()
+	cf.status(prob)
 	return nil
 }
 
