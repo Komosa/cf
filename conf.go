@@ -91,3 +91,18 @@ func load() (map[string]string, error) {
 		return nil
 	})
 }
+
+func (cf *cf) reconf(param string) error {
+	if param == "default" {
+		for k, v := range defConf {
+			cf.config[k] = v
+		}
+	} else {
+		p := strings.SplitN(param, "=", 3)
+		if len(p) != 2 {
+			return fmt.Errorf("reconf: invalid param format %q, must be lang=number", param)
+		}
+		cf.config[p[0]] = p[1]
+	}
+	return cf.save()
+}

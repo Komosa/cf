@@ -119,6 +119,8 @@ func run() error {
 	case "con":
 		cf.config["contest"] = param
 		return cf.save()
+	case "conf":
+		return cf.reconf(param)
 	case "help":
 		fallthrough
 	default: // help
