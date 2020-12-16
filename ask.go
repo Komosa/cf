@@ -31,7 +31,7 @@ func (cf *cf) password() (string, error) {
 	spu := "storepass_" + user
 	sp, ok := cf.config[spu]
 	if !ok {
-		ans, err := ui.Ask("Do you want store encoded password in text file (NOT encrypted!)? [y/N]",
+		ans, err := ui.Ask("Do you want store to encoded password in text file (NOT encrypted!)? [y/N]",
 			&input.Options{Default: "n", HideDefault: true, HideOrder: true})
 		if err == nil {
 			if ans != "" && (ans[0] == 'y' || ans[0] == 'Y' || ans[0] == 't') {
