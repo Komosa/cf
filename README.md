@@ -11,9 +11,7 @@ Features:
 If you don't like to compile it yourself, pre-built binaries are available here: https://github.com/Komosa/cf_binaries
 
 ### Usage
-**Note**: to get best performance it suggested to login before contest.
-
-It is also wise to set contest ID before it started.
+**Note**: to achieve best performance use `cf login` and `cf con CONTESTNUMBERHERE` before the rated contest starts.
 
 Examples (commands):
 - `cf login exampleuser` will try log in as _exampleuser_, asking for password if necessary;
