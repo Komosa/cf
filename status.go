@@ -98,7 +98,7 @@ func (cf *cf) status(prob probCode) {
 		}
 
 		buf := &bytes.Buffer{}
-		fmt.Fprintf(buf, "\rid=%v problem=%v%v ... %v   %s%s", m.Id, m.ContestId, prob.task, string(spin[i%len(spin)]), color(m.Verdict), empty)
+		fmt.Fprintf(buf, "\rid=%v problem=%v%v ... %v   %s%s", m.Id, m.ContestId, prob.task, string(spin[i%len(spin)]), formatVerdict(m), empty)
 		fmt.Print(buf.String()[:80])
 		if m.Verdict != "TESTING" && m.Verdict != "" {
 			break
@@ -110,13 +110,40 @@ func (cf *cf) status(prob probCode) {
 	}
 }
 
-func color(s string) string {
-	var c int
-	if s == "OK" {
-		c = 32
-		s = "ACCEPTED"
-	} else if s != "TESTING" {
-		c = 31
+func formatVerdict(m *MsgSub) string {
+	switch m.Verdict {
+	case "TESTING":
+		return m.Verdict
+	case "OK":
+		if m.Testset == "PRETESTS" {
+			return greenColor("PRETESTS_PASSED")
+		}
+		return greenColor("ACCEPTED")
+	case "RUNTIME_ERROR":
+		fallthrough
+	case "WRONG_ANSWER":
+		fallthrough
+	case "PRESENTATION_ERROR":
+		fallthrough
+	case "TIME_LIMIT_EXCEEDED":
+		fallthrough
+	case "MEMORY_LIMIT_EXCEEDED":
+		fallthrough
+	case "IDLENESS_LIMIT_EXCEEDED":
+		return fmt.Sprintf("%s %s", redColor(m.Verdict), yellowColor(fmt.Sprintf("on test %d", m.PassedTestCount+1)))
+	default:
+		return redColor(m.Verdict)
 	}
-	return fmt.Sprintf("\033[%dm%s\033[0m", c, s)
+}
+
+func redColor(s string) string {
+	return fmt.Sprintf("\033[%dm%s\033[0m", 31, s)
+}
+
+func greenColor(s string) string {
+	return fmt.Sprintf("\033[%dm%s\033[0m", 32, s)
+}
+
+func yellowColor(s string) string {
+	return fmt.Sprintf("\033[%dm%s\033[0m", 33, s)
 }
