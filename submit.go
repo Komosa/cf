@@ -124,7 +124,7 @@ func (cf *cf) submit(file string, prob probCode, lang int) error {
 
 	submitForm := selSubmit.MatchFirst(tree)
 	if submitForm == nil {
-		return errors.New("submit: could not match submit form")
+		return errors.New("submit: could not match submit form\nnote that you could not submit during system testing (right after the contest)")
 	}
 	action := formAction(submitForm)
 	fields := form(selInput.MatchAll(submitForm))
